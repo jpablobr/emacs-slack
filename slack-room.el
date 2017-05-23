@@ -581,5 +581,23 @@
               append (with-slots (groups ims channels) team
                        (cl-remove-if #'(lambda (room) (not (< 0 (oref room unread-count-display))))
                                      (append ims groups channels)))))))
+
+(defmethod slack-room-get-topic ((room slack-room))
+  (oref room topic))
+
+(defmethod slack-room-get-purpose ((room slack-room))
+  (oref room purpose))
+
+(defun slack-room-topic-and-purpose ()
+  (interactive)
+  (if (or (not (bound-and-true-p slack-current-team-id))
+          (not (bound-and-true-p slack-current-room-id)))
+      (error "Call from slack buffer"))
+
+  (let* ((team (slack-team-find slack-current-team-id))
+         (room (slack-room-find slack-current-room-id team))
+         (topic (slack-room-get-topic room))
+         (purpose (slack-room-get-purpose room)))
+    (message "topic: %s, purpose: %s" topic purpose)))
 (provide 'slack-room)
 ;;; slack-room.el ends here
