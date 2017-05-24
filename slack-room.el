@@ -590,14 +590,12 @@
 
 (defun slack-room-topic-and-purpose ()
   (interactive)
-  (if (or (not (bound-and-true-p slack-current-team-id))
-          (not (bound-and-true-p slack-current-room-id)))
-      (error "Call from slack buffer"))
-
+  (slack-buffer-check-team-and-room-id)
   (let* ((team (slack-team-find slack-current-team-id))
          (room (slack-room-find slack-current-room-id team))
          (topic (slack-room-get-topic room))
          (purpose (slack-room-get-purpose room)))
     (message "topic: %s, purpose: %s" topic purpose)))
+
 (provide 'slack-room)
 ;;; slack-room.el ends here
